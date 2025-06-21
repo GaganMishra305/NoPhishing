@@ -1,0 +1,10 @@
+# ignoring python bytecode
+.venv/
+__pycache__/
+*.pyc   
+
+# ignoring large files
+data/
+
+#ignoring checkpoints
+need/
