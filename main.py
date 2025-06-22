@@ -1,42 +1,55 @@
-# main.py
-import sys
 import os
-from train import PhishingURLDetector
+import pickle
+import sys
+import argparse
+
+SAVED_MODELS_BASE_DIR = "saved_models"
 
 def main():
-    """
-    Loads the trained Phishing URL Detector model and allows users to test URLs.
-    """
-    detector = PhishingURLDetector()
-    model_files = {
-        'model_path': 'phishing_model.h5',
-        'vectorizer_path': 'vectorizer.pkl',
-        'encoder_path': 'label_encoder.pkl'
-    }
+    parser = argparse.ArgumentParser(description="Phishing URL Predictor")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="ANN",
+        help="Model architecture to use (e.g., ANN, CNN, XGBOOST)"
+    )
+    args = parser.parse_args()
+    selected_model_architecture = args.model.upper()
 
-    print("Loading model...")
-    if not detector.load_saved_model(**model_files):
-        print("Error: Failed to load model components. Ensure they are in the same directory.")
+    pipeline_path = os.path.join(
+        SAVED_MODELS_BASE_DIR,
+        selected_model_architecture.lower(),
+        f'{selected_model_architecture.lower()}_pipeline.pkl'
+    )
+
+    if not os.path.exists(pipeline_path):
+        print(f"Error: Pipeline file not found at {pipeline_path}.")
+        print("Please ensure the model was trained and saved using `main.py`.")
         sys.exit(1)
 
-    print("Model loaded. Enter URLs to check (type 'exit' to quit):")
+    # Load the complete pipeline
+    with open(pipeline_path, 'rb') as f:
+        pipeline = pickle.load(f)
+
+    print(f"✅ Pipeline '{selected_model_architecture}' loaded successfully!")
+    print("--- Phishing URL Predictor (Concise) ---")
+
     while True:
-        url = input("URL: ").strip()
-        if url.lower() == 'exit':
-            print("Exiting.")
+        user_url = input("Enter a URL to check (or 'quit'): ").strip()
+        if user_url.lower() == 'quit':
+            print("Exiting predictor. Goodbye!")
             break
-        if not url:
-            print("Please enter a URL.")
+        if not user_url:
             continue
 
-        try:
-            result = detector.use(url)
-            if result:
-                print(f"  Prediction: {result['prediction']}, Confidence: {result['confidence']:.4f}")
-            else:
-                print(f"  Could not process URL: '{url}'.")
-        except Exception as e:
-            print(f"  Error processing URL: {e}")
+        result = pipeline.predict(user_url)
+        if result:
+            print(f"URL: {result['url']}")
+            print(f"Prediction: {result['prediction']}")
+            print(f"Confidence: {result['confidence']:.4f}")
+        else:
+            print(f"Could not make a prediction for {user_url}.")
+        print("-" * 50)
 
 if __name__ == "__main__":
     main()
