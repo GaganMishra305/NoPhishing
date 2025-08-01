@@ -1,0 +1,74 @@
+/* extension/styles.css */
+
+/* Container for the tooltip */
+#phishing-detector-tooltip-container {
+    position: absolute;
+    pointer-events: none; /* Allows clicks to pass through to the element underneath */
+    z-index: 2147483647; /* High z-index to ensure it's on top of almost everything */
+    font-family: 'Inter', Arial, sans-serif; /* Using Inter for consistency */
+    font-size: 13px;
+    line-height: 1.4;
+    box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
+    /* No background or border here, they are set on .phishing-detector-tooltip */
+}
+
+/* Actual tooltip box */
+.phishing-detector-tooltip {
+    /* Background and border colors will be set dynamically by JavaScript */
+    border: 1px solid; /* Border color will be set dynamically */
+    border-radius: 8px; /* Rounded corners */
+    padding: 8px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
+    color: white; /* White text for better contrast on colored backgrounds */
+    white-space: nowrap; /* Prevent text wrapping inside the box */
+    transition: opacity 0.2s ease-in-out; /* Smooth fade in/out effect */
+    opacity: 0; /* Start hidden */
+    min-width: 150px; /* Minimum width for readability */
+    max-width: 250px; /* Maximum width to prevent overly wide boxes */
+    overflow: hidden; /* Hide overflow if text is too long */
+    text-overflow: ellipsis; /* Add ellipsis for long text that overflows */
+}
+
+/* Animation for appearance */
+.phishing-detector-tooltip.show {
+    opacity: 1; /* Make visible */
+}
+
+/* Style for the percentage text within the tooltip */
+.phishing-detector-percentage {
+    font-weight: bold; /* Make percentage stand out */
+    margin-left: 5px; /* Spacing from the label */
+}
+
+/* Style for the label (e.g., "Legitimate", "Phishing") within the tooltip */
+.phishing-detector-label {
+    font-style: italic; /* Emphasize the label */
+    margin-right: 5px; /* Spacing from the percentage */
+}
+
+/* Loader indicator styles (for when prediction is in progress) */
+.phishing-detector-loading {
+    display: flex; /* Use flexbox for centering content */
+    align-items: center; /* Vertically center items */
+    justify-content: center; /* Horizontally center items */
+    color: #555; /* Default loading text color */
+    background-color: #f8f8f8; /* Neutral background for loading state */
+    border-color: #ddd; /* Neutral border for loading state */
+}
+
+.phishing-detector-loading::before {
+    content: ''; /* Create a pseudo-element for the spinner */
+    border: 2px solid #f3f3f3; /* Light border color */
+    border-top: 2px solid #3498db; /* Blue top border for animation effect */
+    border-radius: 50%; /* Make it a circle */
+    width: 12px; /* Spinner size */
+    height: 12px;
+    animation: spin 1s linear infinite; /* Apply spin animation */
+    margin-right: 8px; /* Spacing from "Loading..." text */
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

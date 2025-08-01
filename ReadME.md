@@ -15,6 +15,9 @@ docker pull 9453585091/nophishing-api:latest
 docker run -p 5000:5000 9453585091/nophishing-api:latest
 ```
 
+## 3. Running the extension
+Depending on your browser run the extension in dev mode.
+
 ## For-Future:
 * integrate visual-cnn(PhishPedia) and 
 * safe-browsing-API v5
